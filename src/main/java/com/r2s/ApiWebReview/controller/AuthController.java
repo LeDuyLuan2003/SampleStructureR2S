@@ -1,10 +1,10 @@
 package com.r2s.ApiWebReview.controller;
 
-import com.r2s.ApiWebReview.common.util.JwtUtil;
-import com.r2s.ApiWebReview.entity.User;
-import com.r2s.ApiWebReview.service.UserService;
+import com.r2s.ApiWebReview.dto.LoginRequest;
+import com.r2s.ApiWebReview.dto.RegisterRequest;
+import com.r2s.ApiWebReview.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,26 +12,15 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JwtUtil jwtUtil;
+    private AuthService authService;
 
     @PostMapping("/register")
-    public String register(@RequestBody User user) {
-        userService.register(user);
-        return "User registered successfully!";
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        return authService.register(request);
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password) {
-        User user = userService.findByEmail(email);
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            return jwtUtil.generateToken(user.getEmail());
-        }
-        throw new RuntimeException("Invalid credentials");
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        return authService.login(request);
     }
 }
