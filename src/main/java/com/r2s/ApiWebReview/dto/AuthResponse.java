@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class AuthResponse {
     private String token;
+    private String tokenType = "Bearer";
     private long expiresAt;
 
     public AuthResponse(String token, long expiresAt) {
@@ -12,3 +13,4 @@ public class AuthResponse {
         this.expiresAt = expiresAt;
     }
 }
+
