@@ -1,6 +1,6 @@
 # 📦 SampleStructureR2S - Backend Spring Boot
 
-Dự án Spring Boot mẫu theo chuẩn phân tầng `Service / Repository / Controller`  
+Dự án Spring Boot mẫu theo chuẩn phân tầng  
 Tích hợp xác thực người dùng với **JWT + Refresh Token bằng HttpOnly Cookie**
 
 ## 🚀 Tính năng chính
@@ -67,3 +67,30 @@ POST /api/auth/logout | Xoá refreshToken trong DB và xoá cookie phía client
 
 Link postman:
 https://www.postman.com/chatapp-7862/apiwebreview/overview
+
+Cấu trúc dự án:
+src/
+└── main/
+    └── java/
+        └── com/
+            └── r2s/
+                └── ApiWebReview/
+                    ├── common/
+                    │   ├── annotation/         # Custom annotations
+                    │   ├── constant/           # Hằng số toàn cục (AppConstants,SecurityConstants)
+                    │   ├── enum/               # Enum dùng chung (Role, Status,...)
+                    │   ├── event/              # App events (e.g., UserRegisteredEvent)
+                    │   ├── response/           # Response model (ApiResponse, PagingResponse)
+                    │   └── util/               # Helper class (e.g., TokenUtil, DateUtil)
+                    │
+                    ├── config/                # Cấu hình Spring (Security, Swagger, ...)
+                    ├── controller/            # REST API endpoints
+                    ├── dto/                   # Request / Response DTO
+                    ├── entity/                # JPA entities
+                    ├── exception/             # Global exception handler, custom exceptions
+                    ├── mapper/                # DTO <-> Entity mapping
+                    ├── repository/            # Spring Data JPA Repositories
+                    ├── security/              # JWT, Spring Security filters
+                    ├── service/               # Business logic
+                    └── ApiWebReviewApplication.java  # Main Spring Boot class
+
