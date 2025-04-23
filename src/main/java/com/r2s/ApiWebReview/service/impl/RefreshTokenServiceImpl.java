@@ -2,6 +2,7 @@ package com.r2s.ApiWebReview.service.impl;
 
 import com.r2s.ApiWebReview.entity.RefreshToken;
 import com.r2s.ApiWebReview.entity.User;
+import com.r2s.ApiWebReview.exception.type.UnauthorizedException;
 import com.r2s.ApiWebReview.repository.RefreshTokenRepository;
 import com.r2s.ApiWebReview.service.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +43,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiryDate().isBefore(Instant.now())) {
             refreshTokenRepository.delete(token);
-            throw new RuntimeException("Refresh token đã hết hạn, cần đăng nhập lại.");
+            throw new UnauthorizedException("Refresh token đã hết hạn, cần đăng nhập lại.");
         }
         return token;
     }

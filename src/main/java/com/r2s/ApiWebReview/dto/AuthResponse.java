@@ -4,12 +4,12 @@ import lombok.Data;
 
 @Data
 public class AuthResponse {
-    private String token;
+    private String accessToken;
     private String tokenType = "Bearer";
     private long expiresAt;
 
-    public AuthResponse(String token, long expiresAt) {
-        this.token = token;
+    public AuthResponse(String accessToken, long expiresAt) {
+        this.accessToken = accessToken;
         this.expiresAt = expiresAt;
     }
 }

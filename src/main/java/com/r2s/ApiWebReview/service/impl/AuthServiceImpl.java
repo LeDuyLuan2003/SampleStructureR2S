@@ -7,6 +7,9 @@ import com.r2s.ApiWebReview.dto.RegisterRequest;
 import com.r2s.ApiWebReview.entity.RefreshToken;
 import com.r2s.ApiWebReview.entity.Role;
 import com.r2s.ApiWebReview.entity.User;
+import com.r2s.ApiWebReview.exception.type.BadRequestException;
+import com.r2s.ApiWebReview.exception.type.ResourceNotFoundException;
+import com.r2s.ApiWebReview.exception.type.UnauthorizedException;
 import com.r2s.ApiWebReview.repository.RoleRepository;
 import com.r2s.ApiWebReview.repository.UserRepository;
 import com.r2s.ApiWebReview.service.AuthService;
@@ -40,9 +43,9 @@ public class AuthServiceImpl implements AuthService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public ResponseEntity<?> register(RegisterRequest request) {
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Email đã được đăng ký.");
+    public User register(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new BadRequestException("Email đã được đăng ký.");
         }
 
         User user = new User();
@@ -50,76 +53,62 @@ public class AuthServiceImpl implements AuthService {
         user.setFullname(request.getFullname());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        // Gán role mặc định là USER
-        Role role = roleRepository.findByName("USER").orElseThrow(() -> new RuntimeException("Không tìm thấy role USER"));
+        Role role = roleRepository.findByName("USER")
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy role USER"));
         user.setRole(role);
 
-        userRepository.save(user);
-        return ResponseEntity.ok("Đăng ký thành công!");
+        return userRepository.save(user);
     }
 
     @Override
-    public ResponseEntity<?> login(LoginRequest request, HttpServletResponse response) {
+    public AuthResponse login(LoginRequest request, HttpServletResponse response) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElse(null);
+                .orElseThrow(() -> new UnauthorizedException("Email hoặc mật khẩu không đúng."));
 
-        if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return ResponseEntity.badRequest().body("Email hoặc mật khẩu không đúng.");
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new UnauthorizedException("Email hoặc mật khẩu không đúng.");
         }
 
-        // Sinh access token
         String accessToken = jwtUtil.generateToken(user.getEmail());
-
-        // Tạo và lưu refresh token
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
-        // Set cookie HttpOnly cho web
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken.getToken())
                 .httpOnly(true)
-                .secure(false) // set true nếu dùng HTTPS
+                .secure(false)
                 .path("/")
                 .maxAge(7 * 24 * 60 * 60)
                 .sameSite("Strict")
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-        // Trả access token cho client (web/mobile dùng)
-        return ResponseEntity.ok(new AuthResponse(accessToken, System.currentTimeMillis() + jwtUtil.getExpirationTime()));
+        return new AuthResponse(accessToken, System.currentTimeMillis() + jwtUtil.getExpirationTime());
     }
 
     @Override
-    public ResponseEntity<?> refreshAccessToken(String refreshTokenValue) {
-        RefreshToken refreshToken = refreshTokenService
-                .findByToken(refreshTokenValue)
-                .orElseThrow(() -> new RuntimeException("Refresh token không hợp lệ"));
+    public AuthResponse refreshAccessToken(String tokenValue) {
+        RefreshToken token = refreshTokenService.findByToken(tokenValue)
+                .orElseThrow(() -> new UnauthorizedException("Refresh token không hợp lệ"));
 
-        // Kiểm tra hạn sử dụng
-        refreshTokenService.verifyExpiration(refreshToken);
+        refreshTokenService.verifyExpiration(token);
+        String newAccessToken = jwtUtil.generateToken(token.getUser().getEmail());
 
-        // Sinh access token mới từ user
-        User user = refreshToken.getUser();
-        String newAccessToken = jwtUtil.generateToken(user.getEmail());
-
-        return ResponseEntity.ok(new AuthResponse(newAccessToken, System.currentTimeMillis() + jwtUtil.getExpirationTime()));
+        return new AuthResponse(newAccessToken, System.currentTimeMillis() + jwtUtil.getExpirationTime());
     }
 
     @Override
-    public ResponseEntity<?> logout(String refreshToken, HttpServletResponse response) {
-        // Tìm và xoá token trong DB
-        refreshTokenService.findByToken(refreshToken)
-                .ifPresent(token -> refreshTokenService.deleteByUser(token.getUser()));
+    public void logout(String token, HttpServletResponse response) {
+        refreshTokenService.findByToken(token)
+                .ifPresent(t -> refreshTokenService.deleteByUser(t.getUser()));
 
-        // Tạo cookie xoá bỏ
         ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
-                .secure(false)              // nên match với login
+                .secure(false)
                 .path("/")
-                .maxAge(0)                  // xoá cookie
-                .sameSite("Strict")         // thêm dòng này
+                .maxAge(0)
+                .sameSite("Strict")
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
-
-        return ResponseEntity.ok("Đăng xuất thành công.");
     }
+
 
 }
