@@ -23,12 +23,13 @@ Tích hợp xác thực người dùng với **JWT + Refresh Token bằng HttpOn
 - IDE: IntelliJ / VSCode / Eclipse
 ---
   ## ⚙️ Setup
-  ## 1. Clone dự án 
+  
+##1. Clone dự án 
 ```bash
 git clone https://github.com/LeDuyLuan2003/SampleStructureR2S.git
 cd SampleStructureR2S
 
-## 2. Cấu hình môi trường
+##2. Cấu hình môi trường
 - Bước 1:
 Tạo file .env trong thư mục gốc và điền thông tin như sau:
 # JWT Configuration
@@ -36,7 +37,7 @@ JWT_SECRET=j83hf82nf92hf73hf84hf83h38f93hf7h38fh3f
 JWT_EXPIRATION=3600000
 JWT_REFRESH_EXPIRATION=604800000
 
-### Database Configuration
+# Database Configuration
 DB_URL=jdbc:mysql://localhost:3306/ApiWebReview
 DB_USERNAME=root
 DB_PASSWORD=
