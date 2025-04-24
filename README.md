@@ -6,6 +6,8 @@ Tích hợp xác thực người dùng với **JWT + Refresh Token bằng HttpOn
 ## 🚀 Tính năng chính
 
 - Đăng ký / Đăng nhập bằng email & password
+- Gửi email xác thự OTP or Link khi đăng kí
+- Khi thiết bị lạ truy cập thông báo tới email
 - Sinh `accessToken` và `refreshToken`
 - Tự động gia hạn access token nếu còn `refreshToken` hợp lệ
 - Hỗ trợ bảo mật với HttpOnly Cookie
