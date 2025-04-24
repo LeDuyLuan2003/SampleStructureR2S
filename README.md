@@ -22,14 +22,13 @@ Tích hợp xác thực người dùng với **JWT + Refresh Token bằng HttpOn
 - MySQL 8.x
 - IDE: IntelliJ / VSCode / Eclipse
 ---
-## ⚙️ Setup
-
-1. Clone dự án 
+  ## ⚙️ Setup
+  ## 1. Clone dự án 
 ```bash
 git clone https://github.com/LeDuyLuan2003/SampleStructureR2S.git
 cd SampleStructureR2S
 
-2. Cấu hình môi trường
+## 2. Cấu hình môi trường
 - Bước 1:
 Tạo file .env trong thư mục gốc và điền thông tin như sau:
 # JWT Configuration
