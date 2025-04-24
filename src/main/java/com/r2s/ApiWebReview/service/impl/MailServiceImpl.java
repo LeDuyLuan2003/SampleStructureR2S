@@ -16,7 +16,7 @@ public class MailServiceImpl implements MailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    @Value("${CLIENT_URL:http://localhost:8080}")
+    @Value("${CLIENT_URL}")
     private String clientUrl;
 
     @Override

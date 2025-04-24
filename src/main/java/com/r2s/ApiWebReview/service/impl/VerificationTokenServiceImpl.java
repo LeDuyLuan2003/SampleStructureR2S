@@ -6,6 +6,7 @@ import com.r2s.ApiWebReview.repository.VerificationTokenRepository;
 import com.r2s.ApiWebReview.service.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -35,7 +36,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     public Optional<VerificationToken> findByToken(String token) {
         return tokenRepository.findByToken(token);
     }
-
+    @Transactional
     @Override
     public void deleteByUser(User user) {
         tokenRepository.deleteByUser(user);

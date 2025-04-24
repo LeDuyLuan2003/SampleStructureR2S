@@ -9,6 +9,7 @@ import com.r2s.ApiWebReview.service.MailService;
 import com.r2s.ApiWebReview.service.OtpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Random;
@@ -41,7 +42,7 @@ public class OtpServiceImpl implements OtpService {
         mailService.sendOtpEmail(user.getEmail(), otp);
         return otp;
     }
-
+    @Transactional
     @Override
     public void verifyOtp(String otp) {
         OtpVerification otpEntity = otpRepo.findByOtp(otp)

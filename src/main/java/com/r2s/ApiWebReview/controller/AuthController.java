@@ -11,6 +11,7 @@ import com.r2s.ApiWebReview.exception.type.BadRequestException;
 import com.r2s.ApiWebReview.mapper.UserMapper;
 import com.r2s.ApiWebReview.repository.UserRepository;
 import com.r2s.ApiWebReview.service.AuthService;
+import com.r2s.ApiWebReview.service.OtpService;
 import com.r2s.ApiWebReview.service.VerificationTokenService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class AuthController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private OtpService otpService;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<UserResponse>> register(@RequestBody RegisterRequest request) {
@@ -82,4 +86,9 @@ public class AuthController {
         return ResponseEntity.ok("Xác thực email thành công!");
     }
 
+    @PostMapping("/verify-otp")
+    public ResponseEntity<?> verifyOtp(@RequestParam String otp) {
+        otpService.verifyOtp(otp);
+        return ResponseEntity.ok("Xác thực bằng OTP thành công!");
+    }
 }
