@@ -1,5 +1,7 @@
 package com.r2s.ApiWebReview.service.impl;
 
+import com.r2s.ApiWebReview.common.annotation.LogExecutionTime;
+import com.r2s.ApiWebReview.common.enums.RoleEnum;
 import com.r2s.ApiWebReview.common.util.JwtUtil;
 import com.r2s.ApiWebReview.dto.AuthResponse;
 import com.r2s.ApiWebReview.dto.LoginRequest;
@@ -42,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @LogExecutionTime
     @Override
     public User register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -53,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
         user.setFullname(request.getFullname());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        Role role = roleRepository.findByName("USER")
+        Role role = roleRepository.findByName(RoleEnum.USER)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy role USER"));
         user.setRole(role);
 
@@ -61,6 +64,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @LogExecutionTime
     public AuthResponse login(LoginRequest request, HttpServletResponse response) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UnauthorizedException("Email hoặc mật khẩu không đúng."));
