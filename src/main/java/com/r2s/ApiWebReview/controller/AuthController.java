@@ -6,14 +6,19 @@ import com.r2s.ApiWebReview.dto.LoginRequest;
 import com.r2s.ApiWebReview.dto.RegisterRequest;
 import com.r2s.ApiWebReview.dto.UserResponse;
 import com.r2s.ApiWebReview.entity.User;
+import com.r2s.ApiWebReview.entity.VerificationToken;
 import com.r2s.ApiWebReview.exception.type.BadRequestException;
 import com.r2s.ApiWebReview.mapper.UserMapper;
+import com.r2s.ApiWebReview.repository.UserRepository;
 import com.r2s.ApiWebReview.service.AuthService;
+import com.r2s.ApiWebReview.service.VerificationTokenService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Instant;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -24,6 +29,12 @@ public class AuthController {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private VerificationTokenService verificationTokenService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<UserResponse>> register(@RequestBody RegisterRequest request) {
@@ -52,6 +63,23 @@ public class AuthController {
         if (token == null) throw new BadRequestException("Không có refresh token để đăng xuất");
         authService.logout(token, response);
         return ResponseEntity.ok(ApiResponse.success(null, "Đăng xuất thành công!"));
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<?> verifyEmail(@RequestParam String token) {
+        VerificationToken verificationToken = verificationTokenService.findByToken(token)
+                .orElseThrow(() -> new BadRequestException("Token không hợp lệ"));
+
+        if (verificationToken.getExpiryDate().isBefore(Instant.now())) {
+            throw new BadRequestException("Token đã hết hạn!");
+        }
+
+        User user = verificationToken.getUser();
+        user.setEnabled(true);
+        userRepository.save(user);
+        verificationTokenService.deleteByUser(user);
+
+        return ResponseEntity.ok("Xác thực email thành công!");
     }
 
 }

@@ -1,4 +1,4 @@
 package com.r2s.ApiWebReview.common.event;
 
-public class UserLoggedInEvent {
+public class UserLoginEvent {
 }

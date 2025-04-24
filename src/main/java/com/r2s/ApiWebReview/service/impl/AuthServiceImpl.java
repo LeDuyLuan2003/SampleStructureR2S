@@ -2,6 +2,7 @@ package com.r2s.ApiWebReview.service.impl;
 
 import com.r2s.ApiWebReview.common.annotation.LogExecutionTime;
 import com.r2s.ApiWebReview.common.enums.RoleEnum;
+import com.r2s.ApiWebReview.common.event.UserRegisteredEvent;
 import com.r2s.ApiWebReview.common.util.JwtUtil;
 import com.r2s.ApiWebReview.dto.AuthResponse;
 import com.r2s.ApiWebReview.dto.LoginRequest;
@@ -18,6 +19,7 @@ import com.r2s.ApiWebReview.service.AuthService;
 import com.r2s.ApiWebReview.service.RefreshTokenService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +46,9 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
     @LogExecutionTime
     @Override
     public User register(RegisterRequest request) {
@@ -59,8 +64,10 @@ public class AuthServiceImpl implements AuthService {
         Role role = roleRepository.findByName(RoleEnum.USER)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy role USER"));
         user.setRole(role);
+        userRepository.save(user);
 
-        return userRepository.save(user);
+        eventPublisher.publishEvent(new UserRegisteredEvent(user));
+        return user;
     }
 
     @Override
