@@ -74,7 +74,6 @@ API sẽ khởi động tại: http://localhost:8080
 
 ### 🔐 Authentication Flow
 API Endpoint | Mô tả
-
 POST	/api/auth/register	Đăng ký tài khoản với fullname, email, password
 POST	/api/auth/login	Đăng nhập, trả về accessToken và set cookie chứa refreshToken
 POST	/api/auth/refresh	Làm mới accessToken bằng refreshToken trong cookie
@@ -90,7 +89,7 @@ https://www.postman.com/chatapp-7862/apiwebreview/overview
 ---
 
 ## Cấu trúc dự án:
-'''bash
+'''
 src/
 └── main/
     └── java/
@@ -116,3 +115,4 @@ src/
                     ├── service/               # Business logic
                     └── ApiWebReviewApplication.java  # Main Spring Boot class
 
+'''
