@@ -30,7 +30,7 @@ cd SampleStructureR2S
 
 ### 2. Cấu hình môi trường
 #### Bước 1:
-Tạo file .env trong thư mục gốc và điền thông tin như sau:
+##### Tạo file .env trong thư mục gốc và điền thông tin như sau:
 //JWT Configuration
 JWT_SECRET=j83hf82nf92hf73hf84hf83h38f93hf7h38fh3f
 JWT_EXPIRATION=3600000
@@ -41,13 +41,28 @@ DB_URL=jdbc:mysql://localhost:3306/ApiWebReview
 DB_USERNAME=root
 DB_PASSWORD=
 
+//Mail Configuration
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME= example@gamil.com (email của bạn)
+MAIL_PASSWORD=app-password( hướng dẫn lấy app-password của gmail, https://mona.host/huong-dan-lay-mat-khau-ung-dung-mail/)
+CLIENT_URL=http://localhost:8080
+
 #### Bước 2: Cấu hình Run Configuration trong IntelliJ
-Mở IntelliJ
-Chọn Run > Edit Configurations
-Ở mục Environment variables, nhấn biểu tượng 📄 kế bên
-Nhấn Import… > chọn file .env
-Nhấn OK để lưu cấu hình
-Bước 3:
+- Mở IntelliJ IDEA, đảm bảo đã mở project của bạn.
+    - Trên thanh menu, chọn:
+      - Run → Edit Configurations..
+      - Trong cửa sổ cấu hình:
+      - Chọn cấu hình ứng dụng Spring Boot của bạn (nếu chưa có, nhấn + → Spring Boot → chọn main class).
+      - Ở phần "Environment variables", nhấn vào biểu tượng 📄 (góc phải ô input).
+      - Import biến môi trường từ file .env:
+      - Nhấn Import...
+      - Chọn file .env trong thư mục gốc của project
+      - Nhấn OK
+      - Kiểm tra: Các biến như JWT_SECRET, JWT_EXPIRATION,... sẽ hiện ra trong danh sách.
+      - Nhấn OK để lưu cấu hình và chạy lại app là được.
+
+#### Bước 3:
 💡 Bạn cần tạo sẵn database trước khi chạy app:
 CREATE DATABASE ApiWebReview;
 
@@ -59,19 +74,23 @@ API sẽ khởi động tại: http://localhost:8080
 
 ### 🔐 Authentication Flow
 API Endpoint | Mô tả
-POST /api/auth/register | Đăng kí, với fullname , email và password
-POST /api/auth/login | Đăng nhập, trả accessToken + set cookie chứa refreshToken
-POST /api/auth/refresh | Làm mới accessToken từ refreshToken trong cookie
-POST /api/auth/logout | Xoá refreshToken trong DB và xoá cookie phía client
-http://localhost:8080/api/auth/verify?token=29a61901-9780-4c20-ba6e-2a463ade2023
-http://localhost:8080/api/auth/verify-otp?otp=050993
+
+POST	/api/auth/register	Đăng ký tài khoản với fullname, email, password
+POST	/api/auth/login	Đăng nhập, trả về accessToken và set cookie chứa refreshToken
+POST	/api/auth/refresh	Làm mới accessToken bằng refreshToken trong cookie
+POST	/api/auth/logout	Xoá refreshToken trong DB và cookie phía client
+GET	/api/auth/verify?token=...	Xác minh tài khoản bằng url có chứa token gửi qua email (kiểu UUID)
+GET	/api/auth/verify-otp?otp=...	Xác minh OTP (One-Time Password)
 
 ---
+
 ## Link postman:
 https://www.postman.com/chatapp-7862/apiwebreview/overview
 
 ---
+
 ## Cấu trúc dự án:
+'''bash
 src/
 └── main/
     └── java/
