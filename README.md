@@ -25,12 +25,14 @@ Tích hợp xác thực người dùng với **JWT + Refresh Token bằng HttpOn
   ## ⚙️ Setup
   
 ### 1. Clone dự án 
+```
 git clone https://github.com/LeDuyLuan2003/SampleStructureR2S.git
 cd SampleStructureR2S
-
+```
 ### 2. Cấu hình môi trường
 #### Bước 1:
 ##### Tạo file .env trong thư mục gốc và điền thông tin như sau:
+```
 //JWT Configuration
 JWT_SECRET=j83hf82nf92hf73hf84hf83h38f93hf7h38fh3f
 JWT_EXPIRATION=3600000
@@ -47,8 +49,9 @@ MAIL_PORT=587
 MAIL_USERNAME= example@gamil.com (email của bạn)
 MAIL_PASSWORD=app-password( hướng dẫn lấy app-password của gmail, https://mona.host/huong-dan-lay-mat-khau-ung-dung-mail/)
 CLIENT_URL=http://localhost:8080
-
+```
 #### Bước 2: Cấu hình Run Configuration trong IntelliJ
+```
 - Mở IntelliJ IDEA, đảm bảo đã mở project của bạn.
     - Trên thanh menu, chọn:
       - Run → Edit Configurations..
@@ -61,25 +64,30 @@ CLIENT_URL=http://localhost:8080
       - Nhấn OK
       - Kiểm tra: Các biến như JWT_SECRET, JWT_EXPIRATION,... sẽ hiện ra trong danh sách.
       - Nhấn OK để lưu cấu hình và chạy lại app là được.
-
+```
 #### Bước 3:
+```
 💡 Bạn cần tạo sẵn database trước khi chạy app:
 CREATE DATABASE ApiWebReview;
-
+```
 
 ### 3: Run dự án
+```
 mvn clean install
 mvn spring-boot:run
 API sẽ khởi động tại: http://localhost:8080
-
+```
 ### 🔐 Authentication Flow
-API Endpoint | Mô tả
-POST	/api/auth/register	Đăng ký tài khoản với fullname, email, password
-POST	/api/auth/login	Đăng nhập, trả về accessToken và set cookie chứa refreshToken
-POST	/api/auth/refresh	Làm mới accessToken bằng refreshToken trong cookie
-POST	/api/auth/logout	Xoá refreshToken trong DB và cookie phía client
-GET	/api/auth/verify?token=...	Xác minh tài khoản bằng url có chứa token gửi qua email (kiểu UUID)
-GET	/api/auth/verify-otp?otp=...	Xác minh OTP (One-Time Password)
+```
+| Method | Endpoint                          | Mô tả                                                                 |
+|--------|-----------------------------------|----------------------------------------------------------------------|
+| POST   | `/api/auth/register`              | Đăng ký tài khoản với `fullname`, `email`, `password`               |
+| POST   | `/api/auth/login`                 | Đăng nhập, trả về `accessToken` và set cookie chứa `refreshToken`  |
+| POST   | `/api/auth/refresh`               | Làm mới `accessToken` bằng `refreshToken` trong cookie              |
+| POST   | `/api/auth/logout`                | Xoá `refreshToken` trong DB và cookie phía client                   |
+| GET    | `/api/auth/verify?token=...`      | Xác minh tài khoản qua link token (UUID) gửi về email               |
+| GET    | `/api/auth/verify-otp?otp=...`    | Xác minh mã OTP (One-Time Password)                                 |
+```
 
 ---
 
@@ -89,7 +97,8 @@ https://www.postman.com/chatapp-7862/apiwebreview/overview
 ---
 
 ## Cấu trúc dự án:
-'''
+
+```
 src/
 └── main/
     └── java/
@@ -114,5 +123,4 @@ src/
                     ├── security/              # JWT, Spring Security filters
                     ├── service/               # Business logic
                     └── ApiWebReviewApplication.java  # Main Spring Boot class
-
-'''
+```
