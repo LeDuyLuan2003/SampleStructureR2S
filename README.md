@@ -24,25 +24,24 @@ Tích hợp xác thực người dùng với **JWT + Refresh Token bằng HttpOn
 ---
   ## ⚙️ Setup
   
-1. Clone dự án 
-```bash
+### 1. Clone dự án 
 git clone https://github.com/LeDuyLuan2003/SampleStructureR2S.git
 cd SampleStructureR2S
 
-##2. Cấu hình môi trường
-- Bước 1:
+### 2. Cấu hình môi trường
+#### Bước 1:
 Tạo file .env trong thư mục gốc và điền thông tin như sau:
-# JWT Configuration
+//JWT Configuration
 JWT_SECRET=j83hf82nf92hf73hf84hf83h38f93hf7h38fh3f
 JWT_EXPIRATION=3600000
 JWT_REFRESH_EXPIRATION=604800000
 
-# Database Configuration
+//Database Configuration
 DB_URL=jdbc:mysql://localhost:3306/ApiWebReview
 DB_USERNAME=root
 DB_PASSWORD=
 
-Bước 2: Cấu hình Run Configuration trong IntelliJ
+#### Bước 2: Cấu hình Run Configuration trong IntelliJ
 Mở IntelliJ
 Chọn Run > Edit Configurations
 Ở mục Environment variables, nhấn biểu tượng 📄 kế bên
@@ -53,24 +52,26 @@ Bước 3:
 CREATE DATABASE ApiWebReview;
 
 
-3: Run dự án
+### 3: Run dự án
 mvn clean install
 mvn spring-boot:run
-
-
 API sẽ khởi động tại: http://localhost:8080
 
-🔐 Authentication Flow
+### 🔐 Authentication Flow
 API Endpoint | Mô tả
 POST /api/auth/register | Đăng kí, với fullname , email và password
 POST /api/auth/login | Đăng nhập, trả accessToken + set cookie chứa refreshToken
 POST /api/auth/refresh | Làm mới accessToken từ refreshToken trong cookie
 POST /api/auth/logout | Xoá refreshToken trong DB và xoá cookie phía client
+http://localhost:8080/api/auth/verify?token=29a61901-9780-4c20-ba6e-2a463ade2023
+http://localhost:8080/api/auth/verify-otp?otp=050993
 
-Link postman:
+---
+## Link postman:
 https://www.postman.com/chatapp-7862/apiwebreview/overview
 
-Cấu trúc dự án:
+---
+## Cấu trúc dự án:
 src/
 └── main/
     └── java/
