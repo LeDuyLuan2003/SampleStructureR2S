@@ -80,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
             throw new UnauthorizedException("Email hoặc mật khẩu không đúng.");
         }
 
-        String accessToken = jwtUtil.generateToken(user.getEmail());
+        String accessToken = jwtUtil.generateToken(user);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken.getToken())
@@ -101,7 +101,7 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new UnauthorizedException("Refresh token không hợp lệ"));
 
         refreshTokenService.verifyExpiration(token);
-        String newAccessToken = jwtUtil.generateToken(token.getUser().getEmail());
+        String newAccessToken = jwtUtil.generateToken(token.getUser());
 
         return new AuthResponse(newAccessToken, System.currentTimeMillis() + jwtUtil.getExpirationTime());
     }
