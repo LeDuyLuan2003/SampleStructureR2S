@@ -18,16 +18,16 @@ import com.r2s.ApiWebReview.repository.UserRepository;
 import com.r2s.ApiWebReview.service.AuthService;
 import com.r2s.ApiWebReview.service.RefreshTokenService;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-
+@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -53,6 +53,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public User register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
+            //log.warn("Cố gắng đăng ký bằng email hiện có: {}", request.getEmail());
             throw new BadRequestException("Email đã được đăng ký.");
         }
 
