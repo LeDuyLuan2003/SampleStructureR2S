@@ -14,6 +14,7 @@ import com.r2s.ApiWebReview.service.AuthService;
 import com.r2s.ApiWebReview.service.OtpService;
 import com.r2s.ApiWebReview.service.VerificationTokenService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class AuthController {
     private OtpService otpService;
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<UserResponse>> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<ApiResponse<UserResponse>> register(@Valid @RequestBody RegisterRequest request) {
         User user = authService.register(request);
         UserResponse dto = userMapper.toResponseWithRole(user);
         return ResponseEntity.status(HttpStatus.CREATED)

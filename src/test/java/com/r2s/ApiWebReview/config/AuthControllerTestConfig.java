@@ -1,5 +1,6 @@
 package com.r2s.ApiWebReview.config;
 
+import com.r2s.ApiWebReview.common.util.JwtUtil;
 import com.r2s.ApiWebReview.service.AuthService;
 import com.r2s.ApiWebReview.mapper.UserMapper;
 import com.r2s.ApiWebReview.repository.UserRepository;
@@ -35,5 +36,10 @@ public class AuthControllerTestConfig {
     @Bean
     public OtpService otpService() {
         return Mockito.mock(OtpService.class);
+    }
+
+    @Bean
+    public JwtUtil jwtUtil() {
+        return Mockito.mock(JwtUtil.class);
     }
 }

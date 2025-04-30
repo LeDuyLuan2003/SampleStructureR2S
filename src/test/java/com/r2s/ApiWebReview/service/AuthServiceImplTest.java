@@ -1,4 +1,4 @@
-package com.r2s.ApiWebReview;
+package com.r2s.ApiWebReview.service;
 
 import com.r2s.ApiWebReview.common.enums.RoleEnum;
 import com.r2s.ApiWebReview.common.event.UserRegisteredEvent;
@@ -12,7 +12,6 @@ import com.r2s.ApiWebReview.exception.type.BadRequestException;
 import com.r2s.ApiWebReview.exception.type.ResourceNotFoundException;
 import com.r2s.ApiWebReview.repository.RoleRepository;
 import com.r2s.ApiWebReview.repository.UserRepository;
-import com.r2s.ApiWebReview.service.RefreshTokenService;
 import com.r2s.ApiWebReview.service.impl.AuthServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
