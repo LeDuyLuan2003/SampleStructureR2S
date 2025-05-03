@@ -44,25 +44,25 @@ class AuthControllerValidationTest {
         @Test
         @DisplayName("Fullname is null")
         void shouldReturn400_WhenFullnameIsNull() throws Exception {
-            performAndExpect(new RegisterRequest(null, "test@example.com", "Password123"), 400);
+            performAndExpect(new RegisterRequest(null, "test@example.com", "Password123"), 422);
         }
 
         @Test
         @DisplayName("Fullname is blank")
         void shouldReturn400_WhenFullnameIsBlank() throws Exception {
-            performAndExpect(new RegisterRequest("", "test@example.com", "Password123"), 400);
+            performAndExpect(new RegisterRequest("", "test@example.com", "Password123"), 422);
         }
 
         @Test
         @DisplayName("Fullname too short")
         void shouldReturn400_WhenFullnameTooShort() throws Exception {
-            performAndExpect(new RegisterRequest("A", "test@example.com", "Password123"), 400);
+            performAndExpect(new RegisterRequest("A", "test@example.com", "Password123"), 422);
         }
 
         @Test
         @DisplayName("Fullname too long")
         void shouldReturn400_WhenFullnameTooLong() throws Exception {
-            performAndExpect(new RegisterRequest("A".repeat(101), "test@example.com", "Password123"), 400);
+            performAndExpect(new RegisterRequest("A".repeat(101), "test@example.com", "Password123"), 422);
         }
 
         @Test
@@ -78,19 +78,19 @@ class AuthControllerValidationTest {
         @Test
         @DisplayName("Email is null")
         void shouldReturn400_WhenEmailIsNull() throws Exception {
-            performAndExpect(new RegisterRequest("Test User", null, "Password123"), 400);
+            performAndExpect(new RegisterRequest("Test User", null, "Password123"), 422);
         }
 
         @Test
         @DisplayName("Email is blank")
         void shouldReturn400_WhenEmailIsBlank() throws Exception {
-            performAndExpect(new RegisterRequest("Test User", "", "Password123"), 400);
+            performAndExpect(new RegisterRequest("Test User", "", "Password123"), 422);
         }
 
         @Test
         @DisplayName("Email invalid format")
         void shouldReturn400_WhenEmailInvalid() throws Exception {
-            performAndExpect(new RegisterRequest("Test User", "invalid-email", "Password123"), 400);
+            performAndExpect(new RegisterRequest("Test User", "invalid-email", "Password123"), 422);
         }
 
         @Test
@@ -106,19 +106,19 @@ class AuthControllerValidationTest {
         @Test
         @DisplayName("Password is null")
         void shouldReturn400_WhenPasswordIsNull() throws Exception {
-            performAndExpect(new RegisterRequest("Test User", "test@example.com", null), 400);
+            performAndExpect(new RegisterRequest("Test User", "test@example.com", null), 422);
         }
 
         @Test
         @DisplayName("Password is blank")
         void shouldReturn400_WhenPasswordIsBlank() throws Exception {
-            performAndExpect(new RegisterRequest("Test User", "test@example.com", ""), 400);
+            performAndExpect(new RegisterRequest("Test User", "test@example.com", ""), 422);
         }
 
         @Test
         @DisplayName("Password too short")
         void shouldReturn400_WhenPasswordTooShort() throws Exception {
-            performAndExpect(new RegisterRequest("Test User", "test@example.com", "1234567"), 400);
+            performAndExpect(new RegisterRequest("Test User", "test@example.com", "1234567"), 422);
         }
 
         @Test
